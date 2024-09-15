@@ -1,25 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import CourseForm from "./components/CourseForm";
+import Courses from "./components/Courses";
+import Header from "./components/Header";
+import { useReducer } from "react";
 
-function App() {
+const initialState = { courseCode: "", credit: "", grade: "", courses: [] };
+function reducer(state, action) {
+  switch (action.type) {
+    case "code":
+      return { ...state, courseCode: action.payload };
+    case "credit":
+      return { ...state, credit: action.payload };
+    case "grade":
+      return { ...state, grade: action.payload };
+    case "added":
+      return {
+        ...state,
+        courseCode: "",
+        grade: "",
+        credit: "",
+        courses: [...state.courses, action.payload],
+      };
+    case "delete":
+      return {
+        ...state,
+        courses: state.courses.filter((course) => course !== action.payload),
+      };
+    default:
+      throw new Error("Unknown Action");
+  }
+}
+export default function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { courses } = state;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <Header courses={courses} />
+      <CourseForm dispatch={dispatch} state={state} />
+      <Courses courses={courses} dispatch={dispatch} />
     </div>
   );
 }
-
-export default App;
