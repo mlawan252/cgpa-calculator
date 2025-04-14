@@ -1,7 +1,10 @@
-export default function Header({ courses }) {
+import { useSelector } from "react-redux";
+
+export default function Header() {
+  const courses = useSelector(state=>state.course.courses)
   const totalCourses = courses.length;
   
-  const totalUnit = courses.reduce((acc, course) => acc + course.credit, 0);
+  const totalUnit = courses.reduce((acc, course) => acc + course.courseCredit, 0);
   const cgpa = courses.reduce((acc, course) => acc + course.gpa, 0) / totalUnit;
   return (
     <header className="header">
